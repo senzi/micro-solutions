@@ -14,21 +14,37 @@
           <div id="digits" class="digits">
             <span id="mm">00</span><span class="sep">:</span><span id="ss">00</span><span class="milli">.<span id="d10">0</span></span>
           </div>
-          <div id="chip" class="chip" title="点击编辑目标秒数">
-            <span>目标</span>
-            <input id="target" type="number" min="0" step="0.1" placeholder="—" inputmode="decimal">
-            <span class="unit">s</span>
-          </div>
         </div>
       </div>
 
-      <div class="bar">
+<div class="bar">
         <button id="toggle">START</button>
         <div id="score" class="note"></div>
         <div id="diff"  class="note"></div>
+        <button id="targetBtn" class="target-button">目标: <span id="targetDisplay">—</span>s</button>
+      </div>
+
+      <!-- 虚拟键盘模态框 -->
+      <div id="keyboardModal" class="keyboard-modal">
+        <div class="keyboard-modal-content">
+          <div class="keyboard-header">
+            <h3>设置目标秒数</h3>
+            <button id="closeKeyboard" class="close-btn">&times;</button>
+          </div>
+          <div class="target-input-display">
+            <input id="targetInput" type="text" readonly placeholder="0.0">
+            <span class="unit">s</span>
+          </div>
+          <div class="simple-keyboard"></div>
+          <div class="keyboard-actions">
+            <button id="confirmTarget" class="confirm-btn">确认</button>
+            <button id="clearTarget" class="clear-btn">清除</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<script src="simple-keyboard.js"></script>
 <script src="script.js"></script>

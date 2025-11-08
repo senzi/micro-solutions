@@ -9,11 +9,19 @@ const ssEl = document.getElementById('ss');
 const d10El = document.getElementById('d10');
 const status = document.getElementById('status');
 const toggle = document.getElementById('toggle');
-const chip = document.getElementById('chip');
-const target = document.getElementById('target');
 const score = document.getElementById('score');
 const diff = document.getElementById('diff');
 const lamps = [document.getElementById('lamp1'), document.getElementById('lamp2'), document.getElementById('lamp3')];
+
+// 虚拟键盘相关元素
+const targetBtn = document.getElementById('targetBtn');
+const targetDisplay = document.getElementById('targetDisplay');
+const keyboardModal = document.getElementById('keyboardModal');
+const targetInput = document.getElementById('targetInput');
+const closeKeyboard = document.getElementById('closeKeyboard');
+const confirmTarget = document.getElementById('confirmTarget');
+const clearTarget = document.getElementById('clearTarget');
+let keyboard = null;
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -54,7 +62,7 @@ function start() {
     running = true; t0 = performance.now();
     toggle.textContent = "STOP";
     lcd.classList.add('active');
-    chip.setAttribute('aria-disabled', 'true');
+    targetBtn.setAttribute('aria-disabled','true');
     score.textContent = "";
     diff.textContent = "";
     cancelAnimationFrame(raf);
@@ -66,9 +74,9 @@ function stopAt(ms, hitCap = false) {
     cancelAnimationFrame(raf);
     lcd.classList.remove('active');
     toggle.textContent = "START";
-    chip.removeAttribute('aria-disabled');
+    targetBtn.removeAttribute('aria-disabled');
 
-    const sc = evaluate(ms, parseFloat(target.value));
+    const sc = evaluate(ms, parseFloat(targetInput.value));
     if (sc !== null) {
         score.textContent = `score: ${sc}`;
     } else {
@@ -104,7 +112,74 @@ toggle.addEventListener('click', () => {
     }
 });
 
-target.addEventListener('keydown', e => { if (e.key === 'Enter') target.blur(); });
-target.addEventListener('blur', () => { const v = parseFloat(target.value); if (!(v > 0)) target.value = ""; });
+// 虚拟键盘功能
+function initKeyboard() {
+    // 使用简单的数字键盘布局
+    keyboard = new SimpleKeyboard({
+        layout: {
+            default: ["1 2 3", "4 5 6", "7 8 9", "0 . {bksp}"],
+            shift: ["1 2 3", "4 5 6", "7 8 9", "0 . {bksp}"]
+        },
+        display: {
+            "{bksp}": "⌫"
+        },
+        theme: "hg-theme-default",
+        onChange: input => {
+            targetInput.value = input;
+        },
+        onKeyPress: button => {
+            if (button === "{bksp}") {
+                // 处理退格键
+                const currentValue = targetInput.value;
+                if (currentValue.length > 0) {
+                    targetInput.value = currentValue.slice(0, -1);
+                    keyboard.setInput(targetInput.value);
+                }
+            }
+        }
+    });
+}
+
+function showKeyboardModal() {
+    keyboardModal.style.display = 'block';
+    if (!keyboard) {
+        initKeyboard();
+    }
+    // 设置当前值
+    const currentTarget = targetInput.value || '';
+    targetInput.value = currentTarget;
+    keyboard.setInput(currentTarget);
+}
+
+function hideKeyboardModal() {
+    keyboardModal.style.display = 'none';
+}
+
+function updateTargetDisplay() {
+    const value = targetInput.value;
+    targetDisplay.textContent = value || '—';
+}
+
+// 事件监听器
+targetBtn.addEventListener('click', showKeyboardModal);
+closeKeyboard.addEventListener('click', hideKeyboardModal);
+confirmTarget.addEventListener('click', () => {
+    updateTargetDisplay();
+    hideKeyboardModal();
+});
+clearTarget.addEventListener('click', () => {
+    targetInput.value = '';
+    keyboard.setInput('');
+});
+
+// 点击模态框外部关闭
+keyboardModal.addEventListener('click', (e) => {
+    if (e.target === keyboardModal) {
+        hideKeyboardModal();
+    }
+});
+
+// 初始化显示
+updateTargetDisplay();
 
 render(0);

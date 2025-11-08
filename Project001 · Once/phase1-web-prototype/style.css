@@ -146,7 +146,8 @@ body {
     margin-top: 16px;
     display: flex;
     gap: 12px;
-    align-items: center
+    align-items: center;
+    justify-content: center;
 }
 
 button {
@@ -204,4 +205,222 @@ button {
 
 .note:empty {
     display: none
+}
+
+/* 目标按钮样式 */
+.target-button {
+    background: linear-gradient(180deg, #424242, #212121);
+    color: #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin-left: auto;
+    font-weight: 600;
+}
+
+.target-button:hover {
+    background: linear-gradient(180deg, #4a4a4a, #282828);
+}
+
+.target-button[aria-disabled="true"] {
+    opacity: .6;
+    pointer-events: none;
+}
+
+/* 虚拟键盘模态框 */
+.keyboard-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.keyboard-modal-content {
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.keyboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--text-on);
+}
+
+.keyboard-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--sub);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    color: var(--text-on);
+}
+
+.target-input-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.target-input-display input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-on);
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+}
+
+.target-input-display .unit {
+    color: var(--sub);
+    font-size: 18px;
+}
+
+.keyboard-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.confirm-btn, .clear-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.confirm-btn {
+    background: linear-gradient(180deg, #ffb74d, #ff9800);
+    color: #2b2100;
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(180deg, #ffc107, #ff8f00);
+}
+
+.clear-btn {
+    background: linear-gradient(180deg, #757575, #424242);
+    color: #fff;
+}
+
+.clear-btn:hover {
+    background: linear-gradient(180deg, #8a8a8a, #555555);
+}
+
+/* simple-keyboard自定义样式 */
+.simple-keyboard {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+}
+
+.hg-theme-default {
+    background-color: transparent !important;
+}
+
+/* 统一行的布局为 Grid：三列固定宽度，第三列给退格 */
+.hg-row {
+    display: grid !important;
+    grid-template-columns: 56px 56px 112px; /* 前两列等宽，第三列给 {bksp} */
+    column-gap: 8px !important;
+    justify-content: center !important; /* 整体居中，但列对齐一致 */
+    margin-bottom: 8px !important;
+}
+
+.hg-row:last-child {
+    margin-bottom: 0 !important;
+}
+
+.hg-button {
+    background: linear-gradient(180deg, #3a3a3a, #2a2a2a) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-on) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    height: 50px !important;
+    width: 56px !important;        /* 固定宽度 */
+    min-width: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;          /* 去掉margin，用grid-gap控制间距 */
+    border-radius: 8px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
+}
+
+.hg-button:hover {
+    background: linear-gradient(180deg, #4a4a4a, #3a3a3a) !important;
+    transform: translateY(-1px) !important;
+}
+
+.hg-button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 退格键占用第三列，宽度用第三列宽 */
+.hg-button[data-skbtn="{bksp}"] {
+    width: 112px !important;        /* 匹配第三列宽 */
+    min-width: 112px !important;
+    background: linear-gradient(180deg, #d32f2f, #b71c1c) !important;
+    color: white !important;
+    margin-right: 0 !important;     /* 取消之前的负边距补位 */
+}
+
+/* 撤掉会破坏列对齐的"补丁" */
+.hg-row:last-child { 
+    padding-right: 0 !important; 
+    position: static !important;
+}
+.hg-button[data-skbtn="0"] { 
+    margin-left: 0 !important; 
+}
+
+.hg-button[data-skbtn="{bksp}"]:hover {
+    background: linear-gradient(180deg, #f44336, #c62828) !important;
+}
+
+.hg-button.hg-activeButton {
+    background: linear-gradient(180deg, #ffb74d, #ff9800) !important;
+    color: #2b2100 !important;
 }
