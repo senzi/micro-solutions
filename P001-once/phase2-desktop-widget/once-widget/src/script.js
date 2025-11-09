@@ -228,3 +228,12 @@ window.addEventListener('resize', updateScale);
 render(0);
 captureBaseDimensions();
 updateScale();
+
+if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+        baseWidth = null;
+        baseHeight = null;
+        captureBaseDimensions();
+        updateScale();
+    });
+}

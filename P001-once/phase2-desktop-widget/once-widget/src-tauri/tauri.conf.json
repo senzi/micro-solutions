@@ -14,16 +14,16 @@
     "windows": [
       {
         "title": "Once",
-        "width": 360,
-        "height": 160,
+        "width": 780,
+        "height": 420,
         "resizable": true,
-        "minWidth": 240,
-        "minHeight": 120,
+        "minWidth": 360,
+        "minHeight": 220,
         "fullscreen": false,
-        "decorations": false,
-        "transparent": true,
+        "decorations": true,
+        "transparent": false,
         "alwaysOnTop": true,
-        "shadow": false,
+        "shadow": true,
         "visible": true
       }
     ],
