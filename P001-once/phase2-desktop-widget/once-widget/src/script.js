@@ -269,6 +269,8 @@ function updateScale() {
     const scale = Math.min(availableWidth / baseWidth, availableHeight / baseHeight);
     const safeScale = Math.max(0.3, Math.min(scale, 3));
     root.style.setProperty('--app-scale', safeScale.toFixed(4));
+
+    positionInfoButton();
 }
 
 window.addEventListener('resize', updateScale);
@@ -285,3 +287,22 @@ if (document.fonts?.ready) {
         updateScale();
     });
 }
+
+function positionInfoButton() {
+    if (!infoButton || !device) return;
+    const deviceRect = device.getBoundingClientRect();
+    const buttonRect = infoButton.getBoundingClientRect();
+    const gap = 6;
+    let left = deviceRect.right - buttonRect.width - gap;
+    let top = deviceRect.bottom + gap;
+
+    if (left < gap) left = gap;
+    if (top + buttonRect.height + gap > window.innerHeight) {
+        top = window.innerHeight - buttonRect.height - gap;
+    }
+
+    infoButton.style.left = `${Math.round(left)}px`;
+    infoButton.style.top = `${Math.round(top)}px`;
+}
+
+positionInfoButton();

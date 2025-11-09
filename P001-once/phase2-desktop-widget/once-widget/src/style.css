@@ -5,7 +5,6 @@
 }
 
 :root {
-:root {
     --amber: #ffb300;
     --amber-glow: #ffab40;
     --panel: #0c0c0c;
@@ -14,7 +13,7 @@
     --ink: #cfd8dc;
     --sub: #9aa;
     --app-scale: 1;
-    --base-width: 720px;
+    --base-width: 540px;
     --base-height: 320px;
 }
 
@@ -29,10 +28,13 @@ body {
 
 .wrap {
     height: 100%;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 24px;
     box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
 }
 
 [hidden] {
@@ -42,11 +44,11 @@ body {
 .scale-wrapper {
     width: var(--base-width, 720px);
     height: var(--base-height, 320px);
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
     transform: scale(var(--app-scale, 1));
-    transform-origin: center;
+    transform-origin: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .device {
@@ -129,7 +131,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    justify-content: space-between
+    justify-content: center
 }
 
 .digits {
@@ -272,6 +274,16 @@ button {
     cursor: not-allowed;
 }
 
+.target-button input[type="number"]::-webkit-outer-spin-button,
+.target-button input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.target-button input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .target-button .target-label {
     text-transform: uppercase;
     font-size: 13px;
@@ -286,38 +298,47 @@ button {
 }
 
 .info-button {
-    position: absolute;
-    right: 18px;
-    bottom: 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(255, 255, 255, 0.8);
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.35);
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .08em;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1500;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 .info-button:hover {
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    visibility: visible;
 }
 
 .info-button:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline: 2px solid rgba(255, 255, 255, 0.7);
     outline-offset: 2px;
+    opacity: 1;
+    visibility: visible;
 }
 
-.info-glyph:first-child {
+.info-glyph {
     font-size: 16px;
     line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
 }
 
 .info-modal {
@@ -382,21 +403,26 @@ button {
 
 .info-modal__close {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    border: none;
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.8);
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.85);
     cursor: pointer;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .info-modal__close:hover {
-    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 @keyframes infoModalFade {
