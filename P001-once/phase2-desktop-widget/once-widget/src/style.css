@@ -1,0 +1,791 @@
+@font-face {
+    font-family: "DSEG7";
+    src: url("DSEG7Classic-Regular.woff2") format("woff2");
+    font-display: swap;
+}
+
+:root {
+    --amber: #ffb300;
+    --amber-glow: #ffab40;
+    --panel: #0c0c0c;
+    --panel-hi: #141414;
+    --text-on: #ffd180;
+    --ink: #cfd8dc;
+    --sub: #9aa;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background: #000;
+    color: var(--ink);
+    overflow: hidden;
+}
+
+.wrap {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.device {
+    width: min(720px, 92vw);
+    border-radius: 24px;
+    background: linear-gradient(180deg, #1e1e1e, #0b0b0b);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 20px 60px rgba(0, 0, 0, .6);
+    padding: 28px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.bezel {
+    background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03), inset 0 -8px 24px rgba(0, 0, 0, .6)
+}
+
+/* 顶部灯 = 小时进位指示 */
+.lamps {
+    position: absolute;
+    left: 32px;
+    top: 12px;
+    display: flex;
+    gap: 10px
+}
+
+.lamp {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #222;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08)
+}
+
+.lamp.on {
+    background: #ffb300;
+    box-shadow:
+        0 0 8px rgba(255, 171, 64, .75),
+        0 0 18px rgba(255, 171, 64, .35),
+        inset 0 0 0 1px rgba(255, 255, 255, .35)
+}
+
+.lcd {
+    position: relative;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0a0a0a, #111);
+    padding: 22px;
+    overflow: hidden
+}
+
+.lcd::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .06), transparent 30%);
+    pointer-events: none;
+    mix-blend-mode: screen
+}
+
+.lcd::after {
+    content: "";
+    position: absolute;
+    inset: -6%;
+    border-radius: 16px;
+    background: radial-gradient(80% 60% at 50% 40%, rgba(255, 179, 0, .10), transparent 70%);
+    filter: blur(6px);
+    opacity: .6;
+    transition: opacity .25s ease;
+    pointer-events: none
+}
+
+.lcd.active::after {
+    opacity: 1
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between
+}
+
+.digits {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: .2em;
+    font-family: "DSEG7", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--text-on);
+    text-shadow: 0 0 12px rgba(255, 171, 64, .35), 0 0 32px rgba(255, 171, 64, .22);
+    letter-spacing: .04em;
+    line-height: 1;
+    user-select: none;
+    white-space: nowrap;
+    font-size: clamp(48px, 14vw, 128px)
+}
+
+.sep {
+    opacity: .9
+}
+
+.milli {
+    font-size: .28em;
+    filter: drop-shadow(0 0 6px rgba(255, 171, 64, .35))
+}
+
+.status {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--sub)
+}
+
+.bar {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    border: 0;
+    border-radius: 999px;
+    padding: 14px 22px;
+    font: 600 15px/1 system-ui, "Segoe UI", Helvetica, Arial, sans-serif
+}
+
+#toggle {
+    background: linear-gradient(180deg, #ffb74d, #ff9800);
+    color: #2b2100;
+    box-shadow: 0 6px 18px rgba(255, 152, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .35)
+}
+
+.chip {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #141414;
+    color: #e0e0e0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08)
+}
+
+.chip[aria-disabled="true"] {
+    opacity: .6;
+    pointer-events: none
+}
+
+.chip input {
+    width: 6em;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: #fff;
+    text-align: center;
+    font: 600 14px/1.1 system-ui
+}
+
+.chip .unit {
+    opacity: .8
+}
+
+.note {
+    margin-left: 12px;
+    color: #89a;
+    font-size: 15px;
+    font-weight: 600
+}
+
+.note:empty {
+    display: none
+}
+
+/* 目标按钮样式 */
+.target-button {
+    background: linear-gradient(180deg, #424242, #212121);
+    color: #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    margin-left: auto;
+    font-weight: 600;
+}
+
+.target-button:hover {
+    background: linear-gradient(180deg, #4a4a4a, #282828);
+}
+
+.target-button[aria-disabled="true"] {
+    opacity: .6;
+    pointer-events: none;
+}
+
+/* 虚拟键盘模态框 */
+.keyboard-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.keyboard-modal-content {
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.keyboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--text-on);
+}
+
+.keyboard-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--sub);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    color: var(--text-on);
+}
+
+.target-input-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.target-input-display input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-on);
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+}
+
+.target-input-display .unit {
+    color: var(--sub);
+    font-size: 18px;
+}
+
+.keyboard-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.confirm-btn, .clear-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.confirm-btn {
+    background: linear-gradient(180deg, #ffb74d, #ff9800);
+    color: #2b2100;
+}
+
+.confirm-btn:hover {
+    background: linear-gradient(180deg, #ffc107, #ff8f00);
+}
+
+.clear-btn {
+    background: linear-gradient(180deg, #757575, #424242);
+    color: #fff;
+}
+
+.clear-btn:hover {
+    background: linear-gradient(180deg, #8a8a8a, #555555);
+}
+
+/* simple-keyboard自定义样式 */
+.simple-keyboard {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+}
+
+.hg-theme-default {
+    background-color: transparent !important;
+}
+
+/* 统一行的布局为 Grid：三列固定宽度，第三列给退格 */
+.hg-row {
+    display: grid !important;
+    grid-template-columns: 56px 56px 112px; /* 前两列等宽，第三列给 {bksp} */
+    column-gap: 8px !important;
+    justify-content: center !important; /* 整体居中，但列对齐一致 */
+    margin-bottom: 8px !important;
+}
+
+.hg-row:last-child {
+    margin-bottom: 0 !important;
+}
+
+.hg-button {
+    background: linear-gradient(180deg, #3a3a3a, #2a2a2a) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-on) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    height: 50px !important;
+    width: 56px !important;        /* 固定宽度 */
+    min-width: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;          /* 去掉margin，用grid-gap控制间距 */
+    border-radius: 8px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+}
+
+.hg-button:hover {
+    background: linear-gradient(180deg, #4a4a4a, #3a3a3a) !important;
+    transform: translateY(-1px) !important;
+}
+
+.hg-button:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 退格键占用第三列，宽度用第三列宽 */
+.hg-button[data-skbtn="{bksp}"] {
+    width: 112px !important;        /* 匹配第三列宽 */
+    min-width: 112px !important;
+    background: linear-gradient(180deg, #d32f2f, #b71c1c) !important;
+    color: white !important;
+    margin-right: 0 !important;     /* 取消之前的负边距补位 */
+}
+
+/* 撤掉会破坏列对齐的"补丁" */
+.hg-row:last-child { 
+    padding-right: 0 !important; 
+    position: static !important;
+}
+.hg-button[data-skbtn="0"] { 
+    margin-left: 0 !important; 
+}
+
+.hg-button[data-skbtn="{bksp}"]:hover {
+    background: linear-gradient(180deg, #f44336, #c62828) !important;
+}
+
+.hg-button.hg-activeButton {
+    background: linear-gradient(180deg, #ffb74d, #ff9800) !important;
+    color: #2b2100 !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    /* 整体布局优化 */
+    .wrap {
+        padding: 16px;
+    }
+    
+    .device {
+        width: 95vw;
+        padding: 20px;
+        border-radius: 20px;
+    }
+    
+    .bezel {
+        padding: 15px;
+        border-radius: 16px;
+    }
+    
+    /* 顶部灯位置调整 */
+    .lamps {
+        left: 24px;
+        top: 8px;
+        gap: 8px;
+    }
+    
+    .lamp {
+        width: 10px;
+        height: 10px;
+    }
+    
+    /* LCD显示区域优化 */
+    .lcd {
+        padding: 18px;
+        border-radius: 10px;
+    }
+    
+    /* 数字显示大小调整 */
+    .digits {
+        font-size: clamp(36px, 12vw, 80px);
+    }
+    
+    /* 按钮区域优化 */
+    .bar {
+        margin-top: 12px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    button {
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+    
+    /* 目标按钮 */
+    .target-button {
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+    
+    /* 虚拟键盘模态框优化 */
+    .keyboard-modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 15px;
+        border-radius: 12px;
+    }
+    
+    .keyboard-header h3 {
+        font-size: 16px;
+    }
+    
+    .target-input-display {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .target-input-display input {
+        font-size: 20px;
+    }
+    
+    .target-input-display .unit {
+        font-size: 16px;
+    }
+    
+    .keyboard-actions {
+        gap: 8px;
+        margin-top: 15px;
+    }
+    
+    .confirm-btn, .clear-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    /* 虚拟键盘按钮优化 */
+    .simple-keyboard {
+        padding: 10px !important;
+        max-width: 100% !important;
+    }
+    
+    .hg-row {
+        grid-template-columns: 48px 48px 96px;
+        column-gap: 6px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .hg-button {
+        height: 45px !important;
+        width: 48px !important;
+        min-width: 48px !important;
+        font-size: 16px !important;
+    }
+    
+    .hg-button[data-skbtn="{bksp}"] {
+        width: 96px !important;
+        min-width: 96px !important;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    .wrap {
+        padding: 12px;
+    }
+    
+    .device {
+        width: 98vw;
+        padding: 16px;
+    }
+    
+    .bezel {
+        padding: 12px;
+    }
+    
+    .digits {
+        font-size: clamp(32px, 10vw, 64px);
+    }
+    
+    .milli {
+        font-size: .24em;
+    }
+    
+    .bar {
+        gap: 6px;
+    }
+    
+    button {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .keyboard-modal-content {
+        margin: 5% auto;
+        padding: 12px;
+    }
+    
+    .hg-row {
+        grid-template-columns: 42px 42px 84px;
+        column-gap: 5px !important;
+    }
+    
+    .hg-button {
+        height: 40px !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        font-size: 14px !important;
+    }
+    
+    .hg-button[data-skbtn="{bksp}"] {
+        width: 84px !important;
+        min-width: 84px !important;
+    }
+}
+
+/* 移动端横屏模式 - 设备占满全屏 */
+@media (orientation: landscape) and (hover: none) and (pointer: coarse) {
+    .wrap {
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .device {
+        width: 92vw;
+        height: 92vh;
+        max-width: none;
+        max-height: none;
+        padding: 2vh 2vw;
+        margin: 0;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .bezel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 2vh 2vw;
+        margin: 0;
+        min-height: 0;
+    }
+    
+    .lcd {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2vh 2vw;
+        margin: 0;
+        min-height: 0;
+    }
+    
+    .digits {
+        font-size: clamp(48px, 15vh, 120px);
+        line-height: 1;
+    }
+    
+    .milli {
+        font-size: .32em;
+    }
+    
+    .bar {
+        flex-shrink: 0;
+        margin: 1vh 0 0 0;
+        padding: 1vh 0;
+        gap: 2vw;
+    }
+    
+    button {
+        padding: 2vh 4vw;
+        font-size: clamp(16px, 3vh, 24px);
+        min-height: 48px;
+    }
+    
+    .target-button {
+        font-size: clamp(14px, 2.5vh, 20px);
+        min-height: 44px;
+    }
+    
+    .lamps {
+        left: 2vw;
+        top: 1vh;
+        gap: 1vw;
+    }
+    
+    .lamp {
+        width: clamp(10px, 2vh, 16px);
+        height: clamp(10px, 2vh, 16px);
+    }
+    
+    /* 虚拟键盘横屏优化 - 修复对齐问题 */
+    .keyboard-modal-content {
+        width: 95vw;
+        height: 85vh;
+        margin: 7.5vh auto;
+        padding: 2vh 3vw;
+        max-width: 600px;
+        max-height: 700px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .keyboard-header {
+        flex-shrink: 0;
+        margin-bottom: 1.5vh;
+        padding: 0.5vh 0;
+    }
+    
+    .keyboard-header h3 {
+        font-size: clamp(18px, 3vh, 24px);
+    }
+    
+    .target-input-display {
+        flex-shrink: 0;
+        margin-bottom: 1.5vh;
+        padding: 1.5vh 3vw;
+    }
+    
+    .target-input-display input {
+        font-size: clamp(24px, 3.5vh, 32px);
+    }
+    
+    .target-input-display .unit {
+        font-size: clamp(16px, 2.5vh, 20px);
+    }
+    
+    .simple-keyboard {
+        flex: 1;
+        max-height: 50vh !important;
+        padding: 1vh 1vw !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hg-row {
+        margin-bottom: 1vh !important;
+        grid-template-columns: 80px 80px 160px;
+        gap: 1.2vw !important;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .hg-button {
+        height: clamp(45px, 10vh, 70px) !important;
+        width: 100% !important;
+        min-width: auto !important;
+        font-size: clamp(18px, 3vh, 24px) !important;
+    }
+    
+    .hg-button[data-skbtn="{bksp}"] {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+    
+    .keyboard-actions {
+        flex-shrink: 0;
+        margin-top: 1.5vh;
+        gap: 2vw;
+        padding: 0.5vh 0;
+    }
+    
+    .confirm-btn, .clear-btn {
+        padding: 1.8vh 3.5vw;
+        font-size: clamp(16px, 2.5vh, 20px);
+        min-height: 44px;
+    }
+    
+    .close-btn {
+        width: clamp(28px, 3.5vh, 40px);
+        height: clamp(28px, 3.5vh, 40px);
+        font-size: clamp(22px, 3.5vh, 32px);
+    }
+}
+
+/* 桌面端横屏保持原样 */
+@media (orientation: landscape) and (hover: hover) and (pointer: fine) {
+    /* 桌面端横屏保持原有样式，不做特殊处理 */
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    button:active {
+        transform: scale(0.95);
+    }
+    
+    .hg-button:active {
+        transform: scale(0.95) translateY(0) !important;
+    }
+    
+    .target-button:active {
+        transform: scale(0.95);
+    }
+}
