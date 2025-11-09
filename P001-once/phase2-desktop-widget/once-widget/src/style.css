@@ -12,6 +12,9 @@
     --text-on: #ffd180;
     --ink: #cfd8dc;
     --sub: #9aa;
+    --app-scale: 1;
+    --base-width: 720px;
+    --base-height: 320px;
 }
 
 html,
@@ -31,8 +34,18 @@ body {
     box-sizing: border-box;
 }
 
+.scale-wrapper {
+    width: var(--base-width, 720px);
+    height: var(--base-height, 320px);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    transform: scale(var(--app-scale, 1));
+    transform-origin: center;
+}
+
 .device {
-    width: min(720px, 92vw);
+    width: var(--base-width, 720px);
     border-radius: 24px;
     background: linear-gradient(180deg, #1e1e1e, #0b0b0b);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 20px 60px rgba(0, 0, 0, .6);
@@ -212,20 +225,59 @@ button {
 
 /* 目标按钮样式 */
 .target-button {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 12px;
     background: linear-gradient(180deg, #424242, #212121);
     color: #e0e0e0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    margin-left: auto;
     font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: text;
 }
 
-.target-button:hover {
+.target-button:hover,
+.target-button:focus-within {
     background: linear-gradient(180deg, #4a4a4a, #282828);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.target-button[aria-disabled="true"] {
+.target-button input {
+    width: 72px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: right;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.target-button input:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.target-button input:disabled {
     opacity: .6;
-    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.target-button .target-label {
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: .08em;
+    opacity: .85;
+}
+
+.target-button .unit {
+    opacity: .8;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* 虚拟键盘模态框 */
@@ -438,7 +490,6 @@ button {
     }
     
     .device {
-        width: 95vw;
         padding: 20px;
         border-radius: 20px;
     }
@@ -487,6 +538,11 @@ button {
     .target-button {
         font-size: 13px;
         padding: 10px 16px;
+    }
+    
+    .target-button input {
+        width: 64px;
+        font-size: 16px;
     }
     
     /* 虚拟键盘模态框优化 */
@@ -556,7 +612,6 @@ button {
     }
     
     .device {
-        width: 98vw;
         padding: 16px;
     }
     
@@ -616,10 +671,6 @@ button {
     }
     
     .device {
-        width: 92vw;
-        height: 92vh;
-        max-width: none;
-        max-height: none;
         padding: 2vh 2vw;
         margin: 0;
         border-radius: 20px;
@@ -671,6 +722,11 @@ button {
     .target-button {
         font-size: clamp(14px, 2.5vh, 20px);
         min-height: 44px;
+    }
+    
+    .target-button input {
+        width: clamp(96px, 12vw, 160px);
+        font-size: clamp(18px, 3vh, 26px);
     }
     
     .lamps {
