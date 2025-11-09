@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8" />
-<title>一秒 - Once</title>
+<title>一下 · Once</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -32,8 +32,24 @@
             <span class="unit">s</span>
           </label>
         </div>
+        <button id="infoButton" class="info-button" aria-haspopup="dialog" aria-controls="infoModal" aria-label="关于一下">
+          <span class="info-glyph">○</span><span class="info-glyph">i</span>
+        </button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="infoModal" class="info-modal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" hidden>
+  <div class="info-modal__panel">
+    <button class="info-modal__close" id="infoClose" aria-label="关闭">×</button>
+    <h2 id="infoTitle">一下 · Once</h2>
+    <p>“一下” 是一只极简的计时器，也是用来训练时间感觉的小练习。设定一个目标时长，按下开始，再凭感觉按下停止——分数越接近目标，就越靠近属于你的 sweet spot。</p>
+    <p class="info-links">
+      <span>微博：<a href="https://weibo.com/u/7402396589" target="_blank" rel="noreferrer">@阿尼亚是安妮亞</a></span>
+      <span>GitHub：<a href="https://github.com/senzi/micro-solutions/tree/main/P001-once" target="_blank" rel="noreferrer">micro-solutions/P001-once</a></span>
+    </p>
+    <p class="info-meta">MIT 协议 · vibe coding</p>
   </div>
 </div>
 

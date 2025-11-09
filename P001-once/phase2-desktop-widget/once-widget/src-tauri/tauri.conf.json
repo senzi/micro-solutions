@@ -13,7 +13,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Once",
+        "title": "一下 · Once",
         "width": 780,
         "height": 420,
         "resizable": true,

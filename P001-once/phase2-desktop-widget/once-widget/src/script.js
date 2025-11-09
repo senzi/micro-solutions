@@ -19,6 +19,9 @@ const score = document.getElementById('score');
 const diff = document.getElementById('diff');
 const targetInput = document.getElementById('targetInput');
 const lamps = [document.getElementById('lamp1'), document.getElementById('lamp2'), document.getElementById('lamp3')];
+const infoButton = document.getElementById('infoButton');
+const infoModal = document.getElementById('infoModal');
+const infoClose = document.getElementById('infoClose');
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -173,10 +176,55 @@ if (targetInput) {
     });
 }
 
+function isInfoModalOpen() {
+    return infoModal && !infoModal.hasAttribute('hidden');
+}
+
+function openInfoModal() {
+    if (!infoModal) return;
+    infoModal.removeAttribute('hidden');
+    infoClose?.focus();
+}
+
+function closeInfoModal() {
+    if (!infoModal) return;
+    infoModal.setAttribute('hidden', '');
+    infoButton?.focus();
+}
+
+infoButton?.addEventListener('click', () => {
+    if (isInfoModalOpen()) {
+        closeInfoModal();
+    } else {
+        openInfoModal();
+    }
+});
+
+infoClose?.addEventListener('click', closeInfoModal);
+
+infoModal?.addEventListener('click', (event) => {
+    if (event.target === infoModal) {
+        closeInfoModal();
+    }
+});
+
 document.addEventListener('keydown', (event) => {
     if (event.repeat) return;
+
+    if (event.code === 'Escape' && isInfoModalOpen()) {
+        event.preventDefault();
+        closeInfoModal();
+        return;
+    }
+
     const isSpace = event.code === 'Space';
     const isEnter = event.code === 'Enter';
+
+    if (isInfoModalOpen() && (isSpace || isEnter)) {
+        event.preventDefault();
+        return;
+    }
+
     if (!isSpace && !isEnter) return;
 
     if (event.target === toggle) {
