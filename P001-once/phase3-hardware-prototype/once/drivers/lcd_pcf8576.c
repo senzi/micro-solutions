@@ -260,3 +260,39 @@ void lcd_backlight_off(void) {
 #endif
 }
 
+// 显示 MM:SS，分钟和秒都限定在 0~59
+void lcd_pcf8576_show_time_mmss(uint8_t minutes, uint8_t seconds) {
+    if (minutes > 59) minutes = 59;
+    if (seconds > 59) seconds = 59;
+
+    uint8_t m_t = minutes / 10;
+    uint8_t m_u = minutes % 10;
+    uint8_t s_t = seconds / 10;
+    uint8_t s_u = seconds % 10;
+
+    // 这里用原来那套单独写寄存器的方式，保持灵活度
+    // 你可以根据实物的实际段映射，决定哪些位要加 DOT/COL
+    iic_start();
+    SendNBitToRAM(IC_ADDR);
+    SendNBitToRAM(ADDR_NUM1);
+    SendNBitToRAM(LCD_Digit[m_t]);             // 第 1 位：分钟十位
+    iic_stop();
+
+    iic_start();
+    SendNBitToRAM(IC_ADDR);
+    SendNBitToRAM(ADDR_NUM2);
+    SendNBitToRAM(LCD_Digit[m_u]);             // 第 2 位：分钟个位
+    iic_stop();
+
+    iic_start();
+    SendNBitToRAM(IC_ADDR);
+    SendNBitToRAM(ADDR_NUM3);
+    SendNBitToRAM(LCD_Digit[s_t]);             // 第 3 位：秒钟十位
+    iic_stop();
+
+    iic_start();
+    SendNBitToRAM(IC_ADDR);
+    SendNBitToRAM(ADDR_NUM4);
+    SendNBitToRAM(LCD_Digit[s_u] + COL_ON);    // 第 4 位：秒钟个位，同时点亮冒号
+    iic_stop();
+}

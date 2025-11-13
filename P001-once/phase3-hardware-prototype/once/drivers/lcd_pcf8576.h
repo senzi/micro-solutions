@@ -11,6 +11,8 @@ void lcd_pcf8576_init(void);
 void lcd_pcf8576_display_all(uint8_t value);
 void lcd_pcf8576_display_single(uint8_t addr, uint8_t value);
 void lcd_pcf8576_display_digits(uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4);
+void lcd_pcf8576_show_time_mmss(uint8_t minutes, uint8_t seconds);
+
 
 // 背光相关
 void lcd_backlight_init(void);
