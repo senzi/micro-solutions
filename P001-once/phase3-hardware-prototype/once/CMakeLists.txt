@@ -33,9 +33,11 @@ project(once C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# Add executable. Default name is the project name, version 0.1
-
-add_executable(once once.c )
+# Add executable. 默认入口还是 once.c，外加你的驱动源文件
+add_executable(once
+        once.c
+        drivers/lcd_pcf8576.c
+)
 
 pico_set_program_name(once "once")
 pico_set_program_version(once "0.1")
@@ -45,20 +47,21 @@ pico_enable_stdio_uart(once 0)
 pico_enable_stdio_usb(once 1)
 
 # Add the standard library to the build
+# 再加上你要用到的硬件库
 target_link_libraries(once
-        pico_stdlib)
-
-# Add the standard include files to the build
-target_include_directories(once PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-)
-
-# Add any user requested libraries
-target_link_libraries(once 
+        pico_stdlib
+        hardware_gpio
         hardware_i2c
         hardware_timer
         hardware_clocks
-        )
+)
 
+# Add the standard include files to the build
+# 把 drivers 目录也加进 include 搜索路径里，这样能找到 board.h、lcd_pcf8576.h
+target_include_directories(once PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/drivers
+)
+
+# Generate UF2, bin, etc.
 pico_add_extra_outputs(once)
-
