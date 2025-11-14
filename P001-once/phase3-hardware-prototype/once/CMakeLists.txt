@@ -37,6 +37,7 @@ pico_sdk_init()
 add_executable(once
         once.c
         drivers/lcd_pcf8576.c
+        drivers/encoder_ec11.c
 )
 
 pico_set_program_name(once "once")
