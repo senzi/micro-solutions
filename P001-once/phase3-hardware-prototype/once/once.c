@@ -57,7 +57,7 @@ int main() {
     uint64_t last_rot_us  = 0;
 
     // 你手感好的这套
-    const int32_t STEP_TAB[]    = {1, 2, 5, 8, 10, 20};
+    const int32_t STEP_TAB[]    = {1, 2, 5, 10, 20, 30};
     const int     STEP_TAB_LEN  = sizeof(STEP_TAB) / sizeof(STEP_TAB[0]);
     int           step_idx      = 0;
 
